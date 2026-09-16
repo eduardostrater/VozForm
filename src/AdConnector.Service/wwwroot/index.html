@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AD Connector — Monitoreo</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <header class="barra">
+    <div>
+      <h1>AD Connector</h1>
+      <p class="subtitulo">Sincronizacion de correos desde Active Directory</p>
+    </div>
+    <div class="acciones">
+      <span id="indicador" class="pastilla pastilla--neutra">Conectando…</span>
+      <button id="btn-ejecutar" type="button">Ejecutar ahora</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="tarjetas" aria-label="Resumen de la ultima ejecucion">
+      <article class="tarjeta"><span class="etiqueta">Leidos de AD</span><strong id="m-leidos">—</strong></article>
+      <article class="tarjeta"><span class="etiqueta">Validos</span><strong id="m-validos">—</strong></article>
+      <article class="tarjeta tarjeta--exito"><span class="etiqueta">Actualizados</span><strong id="m-actualizados">—</strong></article>
+      <article class="tarjeta"><span class="etiqueta">Ya tenian correo</span><strong id="m-yatenian">—</strong></article>
+      <article class="tarjeta tarjeta--aviso"><span class="etiqueta">Sin coincidencia</span><strong id="m-sincoincidencia">—</strong></article>
+      <article class="tarjeta tarjeta--aviso"><span class="etiqueta">Ambiguos</span><strong id="m-ambiguos">—</strong></article>
+    </section>
+
+    <section class="panel">
+      <h2>Estado del motor</h2>
+      <dl class="detalle">
+        <dt>Modo</dt><dd id="d-modo">—</dd>
+        <dt>Intervalo</dt><dd id="d-intervalo">—</dd>
+        <dt>Ultima ejecucion</dt><dd id="d-ultima">—</dd>
+        <dt>Duracion</dt><dd id="d-duracion">—</dd>
+        <dt>Proxima ejecucion</dt><dd id="d-proxima">—</dd>
+        <dt>Servicio activo desde</dt><dd id="d-inicio">—</dd>
+        <dt>Directorio</dt><dd id="d-directorio">—</dd>
+        <dt>Mensaje</dt><dd id="d-mensaje">—</dd>
+      </dl>
+      <p id="alerta" class="alerta oculto"></p>
+    </section>
+
+    <section class="panel">
+      <div class="panel__cabecera">
+        <h2>Historial</h2>
+        <button id="btn-diagnostico" type="button" class="secundario">Probar conexiones</button>
+      </div>
+      <div class="tabla-envoltura">
+        <table id="tabla-historial">
+          <thead>
+            <tr>
+              <th>Inicio</th><th>Estado</th><th>Modo</th>
+              <th class="num">Leidos</th><th class="num">Validos</th><th class="num">Actualizados</th>
+              <th class="num">Sin coinc.</th><th class="num">Ambiguos</th><th>Mensaje</th>
+            </tr>
+          </thead>
+          <tbody><tr><td colspan="9" class="vacio">Sin datos</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# .NET
+bin/
+obj/
+out/
+publish/
+*.user
+*.suo
+*.userprefs
+.vs/
+.vscode/
+
+# Configuracion local con secretos: NUNCA versionar
+src/AdConnector.Service/appsettings.Production.json
+src/AdConnector.Service/appsettings.Local.json
+*.pubxml.user
+
+# Logs
+logs/
+*.log

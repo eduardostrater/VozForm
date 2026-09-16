@@ -1,0 +1,42 @@
+name: Compilar y empaquetar
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependencias
+        run: dotnet restore AdConnector.sln
+
+      - name: Compilar
+        run: dotnet build AdConnector.sln --configuration Release --no-restore
+
+      # Paquete listo para copiar a IIS. El servidor necesita el
+      # ASP.NET Core 8 Hosting Bundle instalado (aporta el modulo AspNetCoreModuleV2).
+      - name: Publicar para IIS (win-x64)
+        run: >
+          dotnet publish src/AdConnector.Service/AdConnector.Service.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained false
+          --output ./publish
+
+      - name: Subir artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdConnector-IIS-win-x64
+          path: ./publish
+          retention-days: 30
