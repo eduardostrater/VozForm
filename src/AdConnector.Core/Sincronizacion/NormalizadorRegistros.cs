@@ -1,8 +1,8 @@
 using System.Text;
-using AdConnector.Service.Configuracion;
-using AdConnector.Service.Modelos;
+using AdConnector.Core.Configuracion;
+using AdConnector.Core.Modelos;
 
-namespace AdConnector.Service.Sincronizacion;
+namespace AdConnector.Core.Sincronizacion;
 
 /// <summary>
 /// Convierte las entradas crudas de AD en registros aptos para el cruce con la tabla de personas.
@@ -88,6 +88,6 @@ public static class NormalizadorRegistros
             return null;
 
         valor = valor.Trim();
-        return valor.Length <= maximo ? valor : valor[..maximo];
+        return valor.Length <= maximo ? valor : valor.Substring(0, maximo);
     }
 }

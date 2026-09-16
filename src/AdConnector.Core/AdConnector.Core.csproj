@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- netstandard2.0 permite consumir la DLL desde un back de .NET Framework 4.6.1+;
+         net8.0 evita los polyfills cuando el consumidor ya es moderno. -->
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>AdConnector.Core</RootNamespace>
+    <AssemblyName>AdConnector.Core</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>CMH.AdConnector.Core</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Consorcio Minero Horizonte</Authors>
+    <Company>Consorcio Minero Horizonte</Company>
+    <Description>Motor de sincronizacion de correos desde Active Directory hacia SQL Server, cruzando el documento de identidad contra el campo fax del directorio.</Description>
+    <PackageTags>active-directory;ldap;sqlserver;sincronizacion</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>

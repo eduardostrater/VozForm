@@ -1,6 +1,6 @@
-using AdConnector.Service.Modelos;
+using AdConnector.Core.Modelos;
 
-namespace AdConnector.Service.Sincronizacion;
+namespace AdConnector.Core.Sincronizacion;
 
 /// <summary>Estado en memoria que alimenta el tablero de monitoreo.</summary>
 public sealed class EstadoMotor

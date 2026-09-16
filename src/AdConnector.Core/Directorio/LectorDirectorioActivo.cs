@@ -1,10 +1,11 @@
+using AdConnector.Core.Configuracion;
+using AdConnector.Core.Modelos;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.DirectoryServices.Protocols;
 using System.Net;
-using AdConnector.Service.Configuracion;
-using AdConnector.Service.Modelos;
-using Microsoft.Extensions.Options;
 
-namespace AdConnector.Service.Directorio;
+namespace AdConnector.Core.Directorio;
 
 public interface ILectorDirectorioActivo
 {

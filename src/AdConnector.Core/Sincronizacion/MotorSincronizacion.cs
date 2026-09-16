@@ -1,11 +1,12 @@
-using System.Diagnostics;
-using AdConnector.Service.Configuracion;
-using AdConnector.Service.Datos;
-using AdConnector.Service.Directorio;
-using AdConnector.Service.Modelos;
+using AdConnector.Core.Configuracion;
+using AdConnector.Core.Datos;
+using AdConnector.Core.Directorio;
+using AdConnector.Core.Modelos;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
-namespace AdConnector.Service.Sincronizacion;
+namespace AdConnector.Core.Sincronizacion;
 
 /// <summary>
 /// Orquesta el ciclo completo: leer AD, normalizar, cargar staging y ejecutar la actualizacion en SQL Server.

@@ -1,8 +1,5 @@
 using AdConnector.Service.Api;
-using AdConnector.Service.Configuracion;
-using AdConnector.Service.Datos;
-using AdConnector.Service.Directorio;
-using AdConnector.Service.Sincronizacion;
+using AdConnector.Core.Extensiones;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,15 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((contexto, configuracion) =>
     configuracion.ReadFrom.Configuration(contexto.Configuration));
 
+// El motor vive en la biblioteca AdConnector.Core; este proyecto solo lo aloja y lo expone.
 builder.Services
-    .AddOptions<OpcionesAdConnector>()
-    .Bind(builder.Configuration.GetSection(OpcionesAdConnector.Seccion));
-
-builder.Services.AddSingleton<EstadoMotor>();
-builder.Services.AddSingleton<ILectorDirectorioActivo, LectorDirectorioActivo>();
-builder.Services.AddSingleton<IRepositorioPersonas, RepositorioPersonas>();
-builder.Services.AddSingleton<MotorSincronizacion>();
-builder.Services.AddHostedService<ServicioProgramado>();
+    .AgregarAdConnector(builder.Configuration)
+    .AgregarAdConnectorProgramado();
 
 var app = builder.Build();
 

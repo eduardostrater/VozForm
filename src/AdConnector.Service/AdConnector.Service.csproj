@@ -8,12 +8,13 @@
     <AssemblyName>AdConnector.Service</AssemblyName>
     <InvariantGlobalization>true</InvariantGlobalization>
     <UserSecretsId>cmh-ad-connector</UserSecretsId>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
-    <PackageReference Include="System.DirectoryServices.Protocols" Version="8.0.0" />
+    <ProjectReference Include="..\AdConnector.Core\AdConnector.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
   </ItemGroup>
 

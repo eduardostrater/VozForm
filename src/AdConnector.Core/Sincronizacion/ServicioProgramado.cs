@@ -1,7 +1,10 @@
-using AdConnector.Service.Configuracion;
+using AdConnector.Core.Configuracion;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace AdConnector.Service.Sincronizacion;
+namespace AdConnector.Core.Sincronizacion;
 
 /// <summary>
 /// Motor residente: dispara la sincronizacion cada IntervaloMinutos mientras la aplicacion viva.

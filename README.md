@@ -4,8 +4,13 @@ Motor residente que lee Active Directory y completa el correo electronico en la 
 personas de SQL Server, cruzando el **documento de identidad (DNI)** contra el campo **fax**
 del directorio.
 
-- **Backend**: servicio .NET 8 alojado en IIS, con un `BackgroundService` que se ejecuta en intervalos configurables.
+- **`AdConnector.Core`**: biblioteca de clases (`netstandard2.0` + `net8.0`) con todo el motor.
+  Es la DLL que consume cualquier backend de C#, incluido uno de .NET Framework 4.6.1+.
+- **`AdConnector.Service`**: host de IIS que aloja la biblioteca, expone la API y sirve el tablero.
 - **Frontend**: tablero de monitoreo en `/` (estado del motor, contadores, historial, ejecucion manual).
+
+La logica no vive en el host: `AdConnector.Service` solo hospeda. Si manana el motor debe
+correr dentro de otro sistema, se referencia la DLL y listo.
 
 ## Como funciona
 
@@ -81,6 +86,62 @@ contadores del tablero cuadren con lo esperado, cambiar a `false` y reiniciar el
 | GET | `/api/diagnostico` | Prueba conectividad con AD y SQL Server |
 | POST | `/api/ejecutar` | Dispara una sincronizacion manual |
 | GET | `/health` | Sonda para monitoreo de infraestructura |
+
+## Usar la biblioteca desde otro backend de C#
+
+El paquete `CMH.AdConnector.Core` se genera en cada compilacion (pestana **Actions**,
+artefacto `AdConnector-Core-dll`). Referenciarlo por NuGet o por DLL directa.
+
+### Backend con inyeccion de dependencias (.NET 6/8, ASP.NET Core, Worker Service)
+
+```csharp
+using AdConnector.Core.Extensiones;
+
+builder.Services
+    .AgregarAdConnector(builder.Configuration)   // lee la seccion "AdConnector"
+    .AgregarAdConnectorProgramado();             // opcional: ciclo residente
+```
+
+Luego se inyecta donde haga falta:
+
+```csharp
+public sealed class MiControlador(MotorSincronizacion motor, EstadoMotor estado)
+{
+    public Task<ResultadoSincronizacion> Sincronizar(CancellationToken ct) => motor.EjecutarAsync(ct);
+}
+```
+
+### Backend sin contenedor de dependencias (.NET Framework, consola, servicio de Windows)
+
+```csharp
+using AdConnector.Core;
+using AdConnector.Core.Configuracion;
+
+var opciones = new OpcionesAdConnector();
+opciones.ActiveDirectory.Servidor = "dc01.midominio.local";
+opciones.ActiveDirectory.BaseDn   = "DC=midominio,DC=local";
+opciones.BaseDatos.CadenaConexion = "Server=...;Database=...;Integrated Security=True;";
+opciones.Sincronizacion.ModoSimulacion = true;
+
+var conector = FabricaAdConnector.Crear(opciones);
+
+var resultado = await conector.SincronizarAsync();
+Console.WriteLine($"{resultado.Estado}: {resultado.Actualizados} actualizados");
+```
+
+`FabricaAdConnector.Crear` acepta un `ILoggerFactory` opcional; sin el, no registra nada.
+
+### Superficie publica
+
+| Tipo | Para que sirve |
+|---|---|
+| `MotorSincronizacion` | Ejecuta el ciclo completo (AD -> normalizacion -> SQL) |
+| `EstadoMotor` | Estado en memoria: ejecucion en curso, ultima ejecucion, proxima |
+| `ILectorDirectorioActivo` | Lectura cruda de AD, util para diagnostico |
+| `IRepositorioPersonas` | Acceso a la instantanea y al historial |
+| `OpcionesAdConnector` | Toda la configuracion |
+| `ResultadoSincronizacion` | Contadores y estado de una corrida |
+
 
 ## Desarrollo
 

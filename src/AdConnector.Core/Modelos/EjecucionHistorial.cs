@@ -1,4 +1,4 @@
-namespace AdConnector.Service.Modelos;
+namespace AdConnector.Core.Modelos;
 
 /// <summary>Fila del historial de ejecuciones que consume el tablero de monitoreo.</summary>
 public sealed record EjecucionHistorial(

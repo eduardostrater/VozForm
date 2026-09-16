@@ -1,4 +1,4 @@
-namespace AdConnector.Service.Modelos;
+namespace AdConnector.Core.Modelos;
 
 /// <summary>Registro crudo leido de Active Directory, antes de normalizar.</summary>
 public sealed record UsuarioDirectorio(

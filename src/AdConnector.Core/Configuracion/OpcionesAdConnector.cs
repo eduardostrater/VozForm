@@ -1,4 +1,4 @@
-namespace AdConnector.Service.Configuracion;
+namespace AdConnector.Core.Configuracion;
 
 /// <summary>Raiz de configuracion del conector, enlazada a la seccion "AdConnector".</summary>
 public sealed class OpcionesAdConnector

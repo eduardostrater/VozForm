@@ -1,10 +1,11 @@
-using System.Data;
-using AdConnector.Service.Configuracion;
-using AdConnector.Service.Modelos;
+using AdConnector.Core.Configuracion;
+using AdConnector.Core.Modelos;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Data;
 
-namespace AdConnector.Service.Datos;
+namespace AdConnector.Core.Datos;
 
 public interface IRepositorioPersonas
 {
@@ -31,7 +32,7 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
 
     public async Task ProbarConexionAsync(CancellationToken cancelacion)
     {
-        await using var conexion = await AbrirAsync(cancelacion);
+        using var conexion = await AbrirAsync(cancelacion);
     }
 
     public async Task CargarStagingAsync(
@@ -40,7 +41,7 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
         var bd = _opciones.CurrentValue.BaseDatos;
         var destino = NombreCompleto(bd.Esquema, bd.TablaDirectorio);
 
-        await using var conexion = await AbrirAsync(cancelacion);
+        using var conexion = await AbrirAsync(cancelacion);
 
         using var tabla = ConstruirTabla(ejecucionId, registros);
 
@@ -66,8 +67,8 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
         var configuracion = _opciones.CurrentValue;
         var bd = configuracion.BaseDatos;
 
-        await using var conexion = await AbrirAsync(cancelacion);
-        await using var comando = conexion.CreateCommand();
+        using var conexion = await AbrirAsync(cancelacion);
+        using var comando = conexion.CreateCommand();
 
         comando.CommandType = CommandType.StoredProcedure;
         comando.CommandText = NombreCompleto(bd.Esquema, bd.ProcedimientoActualiza);
@@ -103,8 +104,8 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
     {
         var bd = _opciones.CurrentValue.BaseDatos;
 
-        await using var conexion = await AbrirAsync(cancelacion);
-        await using var comando = conexion.CreateCommand();
+        using var conexion = await AbrirAsync(cancelacion);
+        using var comando = conexion.CreateCommand();
 
         comando.CommandTimeout = bd.TimeoutSegundos;
         comando.CommandText = $"""
@@ -126,7 +127,7 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
         comando.Parameters.Add("@pi_Top", SqlDbType.Int).Value = top;
 
         var filas = new List<EjecucionHistorial>();
-        await using var lector = await comando.ExecuteReaderAsync(cancelacion);
+        using var lector = await comando.ExecuteReaderAsync(cancelacion);
 
         while (await lector.ReadAsync(cancelacion))
         {
@@ -197,7 +198,7 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
     }
 
     private static string Acotar(string valor, int maximo) =>
-        valor.Length <= maximo ? valor : valor[..maximo];
+        valor.Length <= maximo ? valor : valor.Substring(0, maximo);
 
     /// <summary>
     /// Arma [esquema].[objeto] validando el identificador: los nombres vienen de configuracion

@@ -34,9 +34,26 @@ jobs:
           --self-contained false
           --output ./publish
 
-      - name: Subir artefacto
+      # Paquete NuGet de la biblioteca, para que otros backends de C# la consuman.
+      - name: Empaquetar la biblioteca (NuGet)
+        run: >
+          dotnet pack src/AdConnector.Core/AdConnector.Core.csproj
+          --configuration Release
+          --output ./paquete
+
+      - name: Subir paquete para IIS
         uses: actions/upload-artifact@v4
         with:
           name: AdConnector-IIS-win-x64
           path: ./publish
+          retention-days: 30
+
+      - name: Subir biblioteca (DLL + NuGet)
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdConnector-Core-dll
+          path: |
+            ./paquete/*.nupkg
+            ./src/AdConnector.Core/bin/Release/netstandard2.0/AdConnector.Core.dll
+            ./src/AdConnector.Core/bin/Release/net8.0/AdConnector.Core.dll
           retention-days: 30

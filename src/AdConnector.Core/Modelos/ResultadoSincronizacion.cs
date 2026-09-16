@@ -1,4 +1,4 @@
-namespace AdConnector.Service.Modelos;
+namespace AdConnector.Core.Modelos;
 
 public sealed class ResultadoSincronizacion
 {

@@ -1,7 +1,7 @@
-using AdConnector.Service.Configuracion;
-using AdConnector.Service.Datos;
-using AdConnector.Service.Directorio;
-using AdConnector.Service.Sincronizacion;
+using AdConnector.Core.Configuracion;
+using AdConnector.Core.Datos;
+using AdConnector.Core.Directorio;
+using AdConnector.Core.Sincronizacion;
 using Microsoft.Extensions.Options;
 
 namespace AdConnector.Service.Api;
