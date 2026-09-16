@@ -15,7 +15,7 @@ public interface IRepositorioPersonas
     Task<(int retorno, string mensaje)> EjecutarActualizacionAsync(
         Guid ejecucionId, ResultadoSincronizacion resultado, CancellationToken cancelacion);
 
-    Task<IReadOnlyList<Dictionary<string, object?>>> ObtenerHistorialAsync(int top, CancellationToken cancelacion);
+    Task<IReadOnlyList<EjecucionHistorial>> ObtenerHistorialAsync(int top, CancellationToken cancelacion);
 }
 
 public sealed class RepositorioPersonas : IRepositorioPersonas
@@ -98,7 +98,7 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
         return (Entero(retorno), mensaje.Value as string ?? string.Empty);
     }
 
-    public async Task<IReadOnlyList<Dictionary<string, object?>>> ObtenerHistorialAsync(
+    public async Task<IReadOnlyList<EjecucionHistorial>> ObtenerHistorialAsync(
         int top, CancellationToken cancelacion)
     {
         var bd = _opciones.CurrentValue.BaseDatos;
@@ -125,16 +125,23 @@ public sealed class RepositorioPersonas : IRepositorioPersonas
             """;
         comando.Parameters.Add("@pi_Top", SqlDbType.Int).Value = top;
 
-        var filas = new List<Dictionary<string, object?>>();
+        var filas = new List<EjecucionHistorial>();
         await using var lector = await comando.ExecuteReaderAsync(cancelacion);
 
         while (await lector.ReadAsync(cancelacion))
         {
-            var fila = new Dictionary<string, object?>(lector.FieldCount);
-            for (var i = 0; i < lector.FieldCount; i++)
-                fila[lector.GetName(i)] = lector.IsDBNull(i) ? null : lector.GetValue(i);
-
-            filas.Add(fila);
+            filas.Add(new EjecucionHistorial(
+                EjecucionId: lector.GetGuid(0),
+                Inicio: lector.GetDateTime(1),
+                Fin: lector.IsDBNull(2) ? null : lector.GetDateTime(2),
+                Estado: lector.GetString(3),
+                Simulacion: lector.GetBoolean(4),
+                Leidos: lector.GetInt32(5),
+                Validos: lector.GetInt32(6),
+                Actualizados: lector.GetInt32(7),
+                SinCoincidencia: lector.GetInt32(8),
+                Ambiguos: lector.GetInt32(9),
+                Mensaje: lector.IsDBNull(10) ? null : lector.GetString(10)));
         }
 
         return filas;

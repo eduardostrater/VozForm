@@ -87,15 +87,15 @@
     cuerpo.replaceChildren(...filas.map((fila) => {
       const tr = document.createElement('tr');
       const celdas = [
-        fecha(fila.DFECHA_INICIO),
-        fila.CESTADO ?? '—',
-        fila.BSIMULACION ? 'Simulacion' : 'Produccion',
-        numero(fila.NREGISTROS_LEIDOS),
-        numero(fila.NREGISTROS_VALIDOS),
-        numero(fila.NREGISTROS_ACTUALIZADOS),
-        numero(fila.NREGISTROS_SIN_COINCIDENCIA),
-        numero(fila.NREGISTROS_AMBIGUOS),
-        fila.VMENSAJE ?? ''
+        fecha(fila.inicio),
+        fila.estado ?? '—',
+        fila.simulacion ? 'Simulacion' : 'Produccion',
+        numero(fila.leidos),
+        numero(fila.validos),
+        numero(fila.actualizados),
+        numero(fila.sinCoincidencia),
+        numero(fila.ambiguos),
+        fila.mensaje ?? ''
       ];
 
       celdas.forEach((valor, indice) => {
